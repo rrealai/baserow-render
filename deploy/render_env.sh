@@ -16,11 +16,13 @@ export DISABLE_VOLUME_CHECK=yes
 export BASEROW_AMOUNT_OF_WORKERS=${BASEROW_AMOUNT_OF_WORKERS:-1}
 export BASEROW_AMOUNT_OF_GUNICORN_WORKERS=${BASEROW_AMOUNT_OF_GUNICORN_WORKERS:-$BASEROW_AMOUNT_OF_WORKERS}
 
-# Disable auto https redirect because otherwise it will make Caddy bind on port 80.
+# Disable auto https redirect - not allowed by Render
 export BASEROW_CADDY_GLOBAL_CONF="auto_https disable_redirects
 http_port $PORT"
 
 export EMAIL_SMTP="false"
 DOCKER_USER=$(whoami)
 export DOCKER_USER
+
+# Run caddy as the same user as the container (avoids setcap issue on Render)
 export BASEROW_CADDY_USER="${BASEROW_CADDY_USER:-$DOCKER_USER}"
