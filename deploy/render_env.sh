@@ -2,8 +2,13 @@
 
 set -euo pipefail
 
-export BASEROW_PUBLIC_URL=$RENDER_EXTERNAL_URL
-export BASEROW_CADDY_ADDRESSES=":$PORT"
+# Nginx listens on 10000 (Render's PORT), so internal services use fixed ports
+export NGINX_PORT="${PORT:-10000}"
+export PORT=3000
+export NUXT_PORT=3000
+
+export BASEROW_PUBLIC_URL="${RENDER_EXTERNAL_URL:-}"
+export BASEROW_CADDY_ADDRESSES=":${NGINX_PORT}"
 export REDIS_URL=${REDIS_TLS_URL:-$REDIS_URL}
 export DJANGO_SETTINGS_MODULE='baserow.config.settings.heroku'
 export BASEROW_RUN_MINIMAL=yes
@@ -16,13 +21,7 @@ export DISABLE_VOLUME_CHECK=yes
 export BASEROW_AMOUNT_OF_WORKERS=${BASEROW_AMOUNT_OF_WORKERS:-1}
 export BASEROW_AMOUNT_OF_GUNICORN_WORKERS=${BASEROW_AMOUNT_OF_GUNICORN_WORKERS:-$BASEROW_AMOUNT_OF_WORKERS}
 
-# Disable auto https redirect - not allowed by Render
-export BASEROW_CADDY_GLOBAL_CONF="auto_https disable_redirects
-http_port $PORT"
-
 export EMAIL_SMTP="false"
 DOCKER_USER=$(whoami)
 export DOCKER_USER
-
-# Run caddy as the same user as the container (avoids setcap issue on Render)
 export BASEROW_CADDY_USER="${BASEROW_CADDY_USER:-$DOCKER_USER}"
