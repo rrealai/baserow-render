@@ -1,5 +1,4 @@
-# Use latest develop build - has proper Render support without setcap issues
-FROM baserow/baserow:develop
+FROM baserow/baserow:develop-latest
 
 RUN apt-get update \
     && apt-get remove -y postgresql postgresql-contrib redis-server \
