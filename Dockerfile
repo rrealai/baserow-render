@@ -1,4 +1,4 @@
-FROM baserow/baserow:2.1.6
+FROM baserow/baserow:2.2.0
 
 RUN apt-get update \
     && apt-get remove -y postgresql postgresql-contrib redis-server \
